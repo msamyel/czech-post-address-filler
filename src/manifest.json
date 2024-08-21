@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "Czech Post Address Filler",
+  "version": "0.1",
+  "description": "Extension for faster filling out addresses on Czech Post website.",
+  "author": "Matěj Voslař",
+
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.postaonline.cz/odvozy/odvozbaliku/secure/parametrybaliku"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+
+  "permissions": ["tabs", "activeTab"],
+
+  "action": {
+    "default_title": "Insert Address",
+    "default_popup": "popup/popup.html"
+  }
+}
