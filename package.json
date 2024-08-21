@@ -1,0 +1,12 @@
+{
+  "name": "czech-post-address-filler",
+  "version": "0.0.1",
+  "description": "Extension for faster filling out addresses on Czech Post website.",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "Matěj Voslař",
+  "license": "GPL-3.0-only",
+  "devDependencies": {}
+}
