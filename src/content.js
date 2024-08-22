@@ -30,10 +30,34 @@ function setupMessageListeners() {
 }
 
 function splitAddress(address) {
-    return address.split(',');
+    const parts = address.split(',');
+    //const exampleSpain = "name, street and number, [apt. number], post number + municipalit, region, country, telephone"
+    //const exampleCanada = "name, street, municipality region postcode, country, telephone"
+    let index = 0;
+    const names = parts[index++];
+    let street = parts[index++];
+    let isAptNumberSeparate = false;
+    if (parts[index].trim().split(' ').length === 1) {
+        // next part is probably apt. number
+        isAptNumberSeparate = true;
+        street += ", " + parts[index++];
+    }
+    const municipality = parts[index++];
+    let countryAndRegion = "";
+    if (parts.length <= (5 + (isAptNumberSeparate ? 1 : 0))) {
+        countryAndRegion = parts[index++];
+    }
+    else {
+        countryAndRegion = parts[index++] + " " + parts[index++];
+    }
+
+    telephone = parts[index++];
+
+    return [names, street, municipality, countryAndRegion, telephone];
 }
 
 function getCountryCode(address) {
+    console.log("checking for country in address: " + address);
     for (const [countryCode, countryName] of Object.entries(countries)) {
         const countryNameParts = countryName.split(' ');
         if (countryNameParts.every(part => address.includes(part))) {
@@ -99,10 +123,10 @@ function pasteAddressIntoForm(address) {
     document.getElementById('adresat.jmeno').value = givenName;
     document.getElementById('adresat.prijmeni').value = surname;
 
-    // match non-numeric parts of STREET
-    const streetName = street.split(' ').filter(part => !part.match(/^\d+$/)).join(' ');
-    // match numeric parts of STREET
-    const streetNumber = street.split(' ').filter(part => part.match(/^\d+$/)).join(' ');
+    // match parts of STREET not containing a number
+    const streetName = street.split(' ').filter(part => !part.match(/\d+/)).join(' ');
+    // match parts of STREET containing a number
+    const streetNumber = street.split(' ').filter(part => part.match(/\d+/)).join(' ');
     document.getElementById('adresat.adresa.uliceRucni').value = streetName;
     document.getElementById('adresat.adresa.cpcoRucni').value = streetNumber;
 
