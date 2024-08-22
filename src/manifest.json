@@ -7,9 +7,7 @@
 
   "content_scripts": [
     {
-      "matches": [
-        "https://www.postaonline.cz/odvozy/odvozbaliku/secure/parametrybaliku"
-      ],
+      "matches": ["https://www.postaonline.cz/odvozy/odvozbaliku/secure/*"],
       "js": ["content.js"],
       "run_at": "document_idle"
     }
