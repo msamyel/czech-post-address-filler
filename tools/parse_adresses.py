@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import json
+import re
 
 def parse_adresses():
     # Read the file
@@ -16,7 +17,9 @@ def parse_adresses():
     # Write the output to a file
         
     for address in addresses:
-        output += '"' + address.get("data-value") + '": "' + address.text.replace(' (Rep)', '').strip() + '",'; 
+        country_name = address.text
+        country_name = re.sub(r"[\(\[].*?[\)\]]", "", country_name)
+        output += '"' + address.get("data-value") + '": "' + country_name.strip() + '",'; 
     
     output = output + "}"
 
