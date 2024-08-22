@@ -13,7 +13,7 @@
     }
   ],
 
-  "permissions": ["tabs", "activeTab"],
+  "permissions": ["tabs", "activeTab", "storage"],
 
   "action": {
     "default_title": "Insert Address",
