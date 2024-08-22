@@ -11,14 +11,17 @@ def parse_adresses():
     soup = BeautifulSoup(file_contents, 'html.parser')
     addresses = soup.find_all(class_='option')
 
-    # Parse the adresses
-    output = dict()
-    for address in addresses:
-        output[address.text] = address.get("data-value"); 
 
+    output = "countries = {"
     # Write the output to a file
-    with open('addresses.json', 'w') as f:
-        json.dump(output, f)
+        
+    for address in addresses:
+        output += '"' + address.get("data-value") + '": "' + address.text.replace(' (Rep)', '').strip() + '",'; 
+    
+    output = output + "}"
+
+    with open('addresses.js', 'w') as f:
+        f.write(output)
 
 if __name__ == "__main__":
     parse_adresses()
