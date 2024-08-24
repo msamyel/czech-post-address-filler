@@ -4,7 +4,8 @@
   "description": "Extension for faster filling out addresses on Czech Post website.",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "doc": "jsdoc src/ -d docs/ -r"
   },
   "author": "Matěj Voslař",
   "license": "GPL-3.0-only",

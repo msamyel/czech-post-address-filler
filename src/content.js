@@ -7,7 +7,7 @@
  */
 
 /**
- * Object mapping country codes to country names.
+ * @desc Object mapping country codes to country names.
  * @type {Object.<string, string>}
  * @const
  */
@@ -44,8 +44,7 @@ function setManualAddressSelection() {
 }
 
 /**
- * Sets up message listeners to receive data from popup.
- * @returns {void}
+ * @desc Sets up message listeners to receive data from popup.
  */
 function setupMessageListeners() {
     // listen for messages from popup
@@ -67,8 +66,8 @@ function setupMessageListeners() {
 }
 
 /**
- * Takes a comma separated string of address parts and splits it into an array, while making adjustments such as making sure apt. number is included in the street, if present.
- * @param {string} Comma-separated address as copied from Shopify. 
+ * @desc Takes a comma separated string of address parts and splits it into an array, while making adjustments such as making sure apt. number is included in the street, if present.
+ * @param {string} address - Comma-separated address as copied from Shopify. 
  * @returns {string[]} Array of address parts ([name, street, town, country, telephone]).
  */
 function splitAddress(address) {
@@ -99,8 +98,8 @@ function splitAddress(address) {
 }
 
 /**
- * Get country code for country/state as used on the Czech Post website.
- * @param {string} Parts of address containing country and region(state) name.  
+ * @desc Get country code for country/state as used on the Czech Post website.
+ * @param {string} address - Parts of address containing country and region(state) name.  
  * @returns {string} Country/state code.
  */
 function getCountryCode(address) {
@@ -116,7 +115,7 @@ function getCountryCode(address) {
 }
 
 /**
- * Store address in local storage to be used after page reload.
+ * @desc Store address in local storage to be used after page reload.
  * @param {string} address 
  * @returns {Promise<void>}
  */
@@ -129,7 +128,7 @@ function storeAddressInStorage(address) {
 }
 
 /**
- * Remove address from local storage.
+ * @desc Remove address from local storage.
  * @returns {Promise<void>}
  */
 function removeAddressFromStorage() {
@@ -153,7 +152,7 @@ function getAddressFromStorage() {
 }
 
 /**
- * After page is loaded, check if there is an address in local storage and if so, paste it into the form.
+ * @desc After page is loaded, check if there is an address in local storage and if so, paste it into the form.
  */
 function handlePageLoaded() {
     console.log("Page loaded.");
@@ -175,9 +174,8 @@ function handlePageLoaded() {
 }
 
 /**
- * After country is selected and page is reloaded, this function will paste the rest of the address into the corresponding fields.
- * @param {string} Comma-separated address as copied from Shopify. 
- * @returns {void}
+ * @desc After country is selected and page is reloaded, this function will paste the rest of the address into the corresponding fields.
+ * @param {string} address - Comma-separated address as copied from Shopify. 
  */
 function pasteAddressIntoForm(address) {
     const [name, street, town, country, telephone] = splitAddress(address);
@@ -216,9 +214,7 @@ function pasteAddressIntoForm(address) {
 }
 
 /**
- * Czech Post is using Selectize for country selection. Because we cannot
- * set the dropdown value directly, we need to simulate a click on the dropdown.
- * @returns {void}
+ * @desc Czech Post is using Selectize for country selection. Because we cannot set the dropdown value directly, we need to simulate a click on the dropdown.
  */
 function activateCountrySelection() {
     const countrySelection = document.getElementById('adresatZemeUrceni-selectized');
@@ -226,9 +222,8 @@ function activateCountrySelection() {
 }
 
 /**
- * Simulate click on the dropdown option which matches the address country.
- * @param {string} Short country/state code as used on the Czech Post website. 
- * @returns {void}
+ * @desc Simulate click on the dropdown option which matches the address country.
+ * @param {string} countryCode - Short country/state code as used on the Czech Post website. 
  */
 function selectCountry(countryCode) {
     const countriesList = document.querySelectorAll('.selectize-dropdown-content .option');
@@ -241,8 +236,7 @@ function selectCountry(countryCode) {
 }
 
 /** 
- * Entrypoint method. 
- * @returns {void}
+ * @desc Entrypoint method. 
 */
 async function start() {
     setupMessageListeners();
