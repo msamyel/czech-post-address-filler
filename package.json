@@ -8,5 +8,8 @@
   },
   "author": "Matěj Voslař",
   "license": "GPL-3.0-only",
-  "devDependencies": {}
+  "devDependencies": {
+    "jsdoc": "^4.0.3",
+    "web-ext": "^7.11.0"
+  }
 }
