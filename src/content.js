@@ -71,7 +71,7 @@ function setupMessageListeners() {
  * @returns {string[]} Array of address parts ([name, street, town, country, telephone]).
  */
 function splitAddress(address) {
-    const parts = address.split(',');
+    const parts = address.split(/[\n,]+/);
     //const exampleSpain = "name, street and number, [apt. number], post number + municipalit, region, country, telephone"
     //const exampleCanada = "name, street, municipality region postcode, country, telephone"
     let index = 0;
