@@ -174,18 +174,34 @@ function handlePageLoaded() {
 }
 
 /**
- * @desc After country is selected and page is reloaded, this function will paste the rest of the address into the corresponding fields.
- * @param {string} address - Comma-separated address as copied from Shopify. 
+ * @desc Divide full name into name and surname and paste them into the corresponding fields.
+ * @param {string} name - Full name of recipient. 
  */
-function pasteAddressIntoForm(address) {
-    const [name, street, town, country, telephone] = splitAddress(address);
-    let [givenName, surname] = name.split(' ');
-    if (!surname) {
-        surname = givenName;
-    }
-    document.getElementById('adresat.jmeno').value = givenName;
-    document.getElementById('adresat.prijmeni').value = surname;
+function pasteNameAndSurname(name) {
+    const nameSplit = name.split(' ');
+    let givenName = "";
+    const surname = nameSplit.pop();
 
+    if (nameSplit.length === 0) {
+        // handle single name
+        givenName = surname;
+    }
+    else {
+        // handle middle names
+        givenName = nameSplit.join(' ');
+    }
+
+    const nameInput = document.getElementById('adresat.jmeno');
+    const surnameInput = document.getElementById('adresat.prijmeni');
+    if (nameInput) nameInput.value = givenName;
+    if (surnameInput) surnameInput.value = surname;
+}
+
+/**
+ * Fill the fields for street name and number. When sending to Czechia, street number should be included in the street name field.
+ * @param {string} street - Street name and number.
+ */
+function pasteStreetNameAndNumber(street) {
     // match parts of STREET not containing a number
     const streetName = street.split(' ').filter(part => !part.match(/\d+/)).join(' ');
     // match parts of STREET containing a number
@@ -199,18 +215,44 @@ function pasteAddressIntoForm(address) {
     else {
         streetNameInput.value += " " + streetNumber;
     }
+}
 
+/**
+ * @desc Extract postal code from town and paste it into the corresponding fields.
+ * @param {string} town - Town name with postal code.
+ */
+function pasteTownAndPostalCode(town) {
     // match any parts of TOWN containing a number
-    const postCode = town.split(' ').filter(part => part.match(/\d+/)).join(' ');
+    const postalCode = town.split(' ').filter(part => part.match(/\d+/)).join(' ');
     let postalCodeInput = document.getElementById('adresat.adresa.pscZahranicni') || document.getElementById('adresat.adresa.pscRucni');
-    postalCodeInput.value = postCode;
+    if (postalCodeInput) postalCodeInput.value = postalCode;
 
     // TOWN without post code
-    const municipality = town.replace(postCode, '').trim();
-    document.getElementById('adresat.adresa.obecCastObceRucni').value = municipality;
+    const municipality = town.replace(postalCode, '').trim();
+    const municipalityInput = document.getElementById('adresat.adresa.obecCastObceRucni');
+    if (municipalityInput) municipalityInput.value = municipality;
+}
 
+/**
+ * @desc Paste telephone number without whitespace with leading + symbol.
+ * @param {string} telephone - Telephone number.
+ */
+function pasteTelephoneNumber(telephone) {
     const phone = telephone.replace(/\D/g, '');
-    document.getElementById('adresat.kontakt.telefon').value = "+" + phone;
+    const telephoneInput = document.getElementById('adresat.kontakt.telefon');
+    if (telephoneInput) telephoneInput.value = "+" + phone;
+}
+
+/**
+ * @desc After country is selected and page is reloaded, this function will paste the rest of the address into the corresponding fields.
+ * @param {string} address - Comma-separated address as copied from Shopify. 
+ */
+function pasteAddressIntoForm(address) {
+    const [name, street, town, country, telephone] = splitAddress(address);
+    pasteNameAndSurname(name);
+    pasteStreetNameAndNumber(street);
+    pasteTownAndPostalCode(town);
+    pasteTelephoneNumber(telephone);
 }
 
 /**
