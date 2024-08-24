@@ -19,7 +19,9 @@ const countries = { "AF/": "Afghanistan", "AX/": "Aland Islands", "AL/": "Albani
  * @returns {string} Adjusted country name.
  */
 function adjustCountryNameForShopify(countryName) {
-    return countryName.replace('Czechia', 'Czech Republic');
+    return countryName
+        .replace('Czechia', 'Czech Republic')
+        .replace('United States', 'United States of America');
 }
 
 /**
