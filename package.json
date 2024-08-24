@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "test",
-    "doc": "jsdoc src/ -d docs/ -r"
+    "doc": "jsdoc src/ -d docs/ -r",
+    "build": "sh build.sh"
   },
   "author": "Matěj Voslař",
   "license": "GPL-3.0-only",
