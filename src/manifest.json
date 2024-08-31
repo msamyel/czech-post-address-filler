@@ -20,7 +20,7 @@
     "128": "res/icon128.png"
   },
 
-  "permissions": ["tabs", "activeTab", "storage"],
+  "permissions": ["activeTab", "storage"],
 
   "action": {
     "default_title": "Insert Address",
