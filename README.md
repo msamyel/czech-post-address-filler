@@ -2,6 +2,10 @@
 
 Extension for easier addressee registration on Czech Post website.
 
+## Disclaimer
+
+This extension currently doesn't work as inteded. In many cases, it will cause the Czech Post website to return an error and not be able to proceed with placing the order. I am currently exploring ways to make the extension work on Czech Post website.
+
 ## How to install
 
 TBA
