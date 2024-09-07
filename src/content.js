@@ -59,8 +59,8 @@ function setupMessageListeners() {
                 const countryCode = getCountryCode(adjustCountryNameForShopify(town + " " + country));
                 console.log("Country code: " + countryCode);
                 storeAddressInStorage(request.address).then(() => {
-                    activateCountrySelection();
-                    setTimeout(() => { selectCountry(countryCode); }, 1000);
+                    //activateCountrySelection();
+                    //setTimeout(() => { selectCountry(countryCode); }, 1000);
                 });
             }
         }
@@ -195,8 +195,8 @@ function pasteNameAndSurname(name) {
 
     const nameInput = document.getElementById('adresat.jmeno');
     const surnameInput = document.getElementById('adresat.prijmeni');
-    if (nameInput) nameInput.value = givenName;
-    if (surnameInput) surnameInput.value = surname;
+    fillTextInput(nameInput, givenName);
+    fillTextInput(surnameInput, surname);
 }
 
 /**
@@ -212,10 +212,10 @@ function pasteStreetNameAndNumber(street) {
     const streetNoInput = document.getElementById('adresat.adresa.cpcoRucni');
     streetNameInput.value = streetName;
     if (streetNoInput) {
-        streetNoInput.value = streetNumber;
+        fillTextInput(streetNoInput, streetNumber);
     }
     else {
-        streetNameInput.value += " " + streetNumber;
+        fillTextInput(streetNameInput, streetNameInput.value + " " + streetNumber);
     }
 }
 
@@ -227,12 +227,12 @@ function pasteTownAndPostalCode(town) {
     // match any parts of TOWN containing a number
     const postalCode = town.split(' ').filter(part => part.match(/\d+/)).join(' ');
     let postalCodeInput = document.getElementById('adresat.adresa.pscZahranicni') || document.getElementById('adresat.adresa.pscRucni');
-    if (postalCodeInput) postalCodeInput.value = postalCode;
+    fillTextInput(postalCodeInput, postalCode);
 
     // TOWN without post code
     const municipality = town.replace(postalCode, '').trim();
     const municipalityInput = document.getElementById('adresat.adresa.obecCastObceRucni');
-    if (municipalityInput) municipalityInput.value = municipality;
+    fillTextInput(municipalityInput, municipality);
 }
 
 /**
@@ -242,7 +242,7 @@ function pasteTownAndPostalCode(town) {
 function pasteTelephoneNumber(telephone) {
     const phone = telephone.replace(/\D/g, '');
     const telephoneInput = document.getElementById('adresat.kontakt.telefon');
-    if (telephoneInput) telephoneInput.value = "+" + phone;
+    fillTextInput(telephoneInput, "+" + phone);
 }
 
 /**
@@ -255,6 +255,16 @@ function pasteAddressIntoForm(address) {
     pasteStreetNameAndNumber(street);
     pasteTownAndPostalCode(town);
     pasteTelephoneNumber(telephone);
+}
+
+function fillTextInput(textInput, value) {
+    if (!textInput) {
+        return;
+    }
+    textInput.focus();
+    textInput.value = value;
+    const event = new Event('input', { bubbles: true });
+    textInput.dispatchEvent(event);
 }
 
 /**
