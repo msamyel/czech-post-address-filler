@@ -117,7 +117,12 @@ function onPasteToTextArea(address) {
     const [givenName, surname, street, houseNumber, town, postalCode, telephone] = splitAddress(address);
 
     // change order of elements to fit the Czech Post form
-    clipboardFeed = [givenName, surname, town, street, houseNumber, postalCode, telephone];
+    if (isSendingToCzechRepublic()) {
+        clipboardFeed = [givenName, surname, town, street + " " + houseNumber, postalCode, telephone];
+    }
+    else {
+        clipboardFeed = [givenName, surname, town, street, houseNumber, postalCode, telephone];
+    }
 
     const targetElement = document.querySelector("#cz-post-extension-container-right-line-container");
     targetElement.innerHTML = "";
@@ -149,9 +154,10 @@ function adjustCountryNameForShopify(countryName) {
  * To allow the extension to fill in all the fields, we must first select "manual address input" in the input type dropdown.
  * @returns {void}
  */
-function setManualAddressSelection() {
+function isSendingToCzechRepublic() {
     //if #adresatTypAdresy is present, this is a package within Czech Republic
     const addressInputType = document.getElementById("adresatTypAdresy");
+    return !(!addressInputType);
 }
 
 /**
@@ -189,7 +195,7 @@ function splitAddress(address) {
     // match parts of STREET containing a number
     const houseNumber = street.split(' ').filter(part => part.match(/\d+/)).join(' ');
     // match any parts of TOWN containing a number
-    const postalCode = townAndPostalCode.split(' ').filter(part => part.match(/\d+/)).join(' ');
+    const postalCode = townAndPostalCode.split(' ').filter(part => part.match(/\d+/)).join();
     // TOWN without post code
     const municipality = townAndPostalCode.replace(postalCode, '').trim();
     // only NUMERIC parts of telephone
