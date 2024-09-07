@@ -8,6 +8,7 @@
   "content_scripts": [
     {
       "matches": ["https://www.postaonline.cz/odvozy/odvozbaliku/secure/*"],
+      "css": ["content.css"],
       "js": ["content.js"],
       "run_at": "document_idle"
     }

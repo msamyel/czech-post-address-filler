@@ -1,0 +1,43 @@
+#cz-post-extension-container {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+#cz-post-extension-container-left {
+  width: 50%;
+}
+
+#cz-post-extension-container-left label {
+  width: 100%;
+}
+
+#cz-post-extension-container-right {
+  width: 50%;
+  font-size: 10pt;
+}
+
+#cz-post-extension-container-right-info {
+  font-weight: bold;
+}
+
+#cz-post-extension-container-right ul {
+  font-size: 8pt;
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+#cz-post-extension-container-right li {
+  padding-left: 1em;
+  text-indent: -1em;
+}
+
+#cz-post-extension-container-right li:before {
+  padding-right: 5px;
+}
+
+#cz-post-extension-container-right li.current:before {
+  content: "▶";
+  padding-right: 5px;
+}

@@ -38,20 +38,28 @@ function setUpControlVListener() {
 
 function loadFirstLineToClipboard() {
     navigator.clipboard.writeText(clipboardFeed[0]);
+    markCurrentlyCopiedLine(0);
 }
 
 function loadNextLineToClipboard() {
     setTimeout(() => {
+        markAsPasted(clipboardIndex);
         clipboardIndex++;
+        markCurrentlyCopiedLine(clipboardIndex);
         const line = clipboardFeed[clipboardIndex];
         navigator.clipboard.writeText(line);
     }, 100);
 }
 
 function appendTextArea() {
+    const containerDiv = document.createElement('div');
+    containerDiv.id = 'cz-post-extension-container';
+
     const textarea = document.createElement('textarea');
     textarea.id = 'address-input';
     textarea.placeholder = 'Press Ctrl+V to paste the address';
+    textarea.style.width = '70%';
+    textarea.style.height = '180px';
     textarea.style.backgroundColor = 'lightyellow';
     textarea.addEventListener('input', function (e) {
         const address = e.target.value;
@@ -59,8 +67,50 @@ function appendTextArea() {
     });
 
     const targetElement = document.querySelector('h1').parentElement;
-    targetElement.appendChild(textarea);
+
+    const label = document.createElement('label');
+    label.htmlFor = 'address-input';
+    label.innerText = 'Paste address AFTER selecting country!';
+
+    const leftDiv = document.createElement('div');
+    leftDiv.id = "cz-post-extension-container-left";
+
+    leftDiv.appendChild(label);
+    leftDiv.appendChild(textarea);
+
+    const rightDiv = document.createElement('div');
+    rightDiv.id = "cz-post-extension-container-right";
+    const rightDivInfo = document.createElement('p');
+    rightDivInfo.id = "cz-post-extension-container-right-info";
+    rightDivInfo.innerText = "Clipboard (press Ctrl+V to paste the value after \"▶\"):";
+    rightDiv.appendChild(rightDivInfo);
+    const rightDivLineDisplay = document.createElement('ul');
+    rightDivLineDisplay.id = "cz-post-extension-container-right-line-container";
+    rightDiv.appendChild(rightDivLineDisplay);
+
+    containerDiv.appendChild(leftDiv);
+    containerDiv.appendChild(rightDiv);
+    targetElement.appendChild(containerDiv);
     console.log("Appended text area!");
+}
+
+function markAsPasted(lineIndex) {
+    const targetElement = document.querySelector('#cz-post-extension-container-right');
+    const p = targetElement.querySelector(`li[data-line_index="${lineIndex}"]`);
+    p.style.textDecoration = "line-through";
+}
+
+function markCurrentlyCopiedLine(currentIndex) {
+    const targetElements = document.querySelectorAll('#cz-post-extension-container-right-line-container > li');
+    console.log(targetElements);
+    targetElements.forEach((element, index) => {
+        if (index === currentIndex) {
+            element.classList.add("current");
+        }
+        else {
+            element.classList.remove("current");
+        }
+    });
 }
 
 function onPasteToTextArea(address) {
@@ -68,6 +118,16 @@ function onPasteToTextArea(address) {
 
     // change order of elements to fit the Czech Post form
     clipboardFeed = [givenName, surname, town, street, houseNumber, postalCode, telephone];
+
+    const targetElement = document.querySelector("#cz-post-extension-container-right-line-container");
+    targetElement.innerHTML = "";
+
+    [...clipboardFeed].forEach((line, index) => {
+        const p = document.createElement('li');
+        p.innerText = line;
+        p.dataset["line_index"] = index;
+        targetElement.appendChild(p);
+    });
 
     isListentingForCtrlV = true;
     loadFirstLineToClipboard();
