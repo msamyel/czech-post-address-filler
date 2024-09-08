@@ -87,11 +87,25 @@ function appendTextArea() {
     const rightDivLineDisplay = document.createElement('ul');
     rightDivLineDisplay.id = "cz-post-extension-container-right-line-container";
     rightDiv.appendChild(rightDivLineDisplay);
+    const resetButton = document.createElement('button');
+    resetButton.innerText = "Reset";
+    resetButton.addEventListener('click', resetAll);
+    rightDiv.appendChild(resetButton);
 
     containerDiv.appendChild(leftDiv);
     containerDiv.appendChild(rightDiv);
     targetElement.appendChild(containerDiv);
     console.log("Appended text area!");
+}
+
+function resetAll() {
+    clipboardFeed = [];
+    clipboardIndex = 0;
+    isListentingForCtrlV = false;
+    const targetElement = document.querySelector("#cz-post-extension-container-right-line-container");
+    targetElement.innerHTML = "";
+    const textArea = document.querySelector("#address-input");
+    textArea.value = "";
 }
 
 function markAsPasted(lineIndex) {
