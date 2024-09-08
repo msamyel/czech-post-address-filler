@@ -71,6 +71,9 @@ function appendTextArea() {
     const label = document.createElement('label');
     label.htmlFor = 'address-input';
     label.innerText = 'Paste address AFTER selecting country!';
+    if (isSendingToCzechRepublic()) {
+        label.innerText += ' When sending to the Czech Republic, set the address type to "Entering the address manually" first.';
+    }
 
     const leftDiv = document.createElement('div');
     leftDiv.id = "cz-post-extension-container-left";
