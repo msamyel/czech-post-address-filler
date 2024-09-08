@@ -2,11 +2,11 @@
 
 /**
  * @file Content script that will run on "Poslat zásilku/Send consignment
-" page and will fill in the form with the data from the order.
+" page and will feed values line after line into clipboard for faster input.
  * @author Matěj <matej94v@gmail.com>
  */
 
-//todo: implement a way to reset state?
+
 let clipboardFeed = []
 let clipboardIndex = 0;
 let ctrlDown = false;
@@ -16,6 +16,7 @@ const ctrlKey = 17,
     vKey = 86,
     cKey = 67;
 
+/** Listen to Ctrl+V or Cmd+V (MacOS) */
 function setUpControlVListener() {
     document.addEventListener('keydown', function (e) {
         if (!isListentingForCtrlV) {
@@ -25,7 +26,6 @@ function setUpControlVListener() {
             ctrlDown = true;
         }
         if (event.key === 'v' && ctrlDown) {
-            console.log("Ctrl+V pressed.");
             loadNextLineToClipboard();
         }
     });
@@ -36,11 +36,18 @@ function setUpControlVListener() {
     });
 }
 
+/**
+ * Load the first line from the clipboard feed to the clipboard.
+ */
 function loadFirstLineToClipboard() {
     navigator.clipboard.writeText(clipboardFeed[0]);
     markCurrentlyCopiedLine(0);
 }
 
+/**
+ * Load the next line from the clipboard feed to the clipboard.
+ * This is triggered immediately after the user presses Ctrl+V, so we add a small delay.
+ */
 function loadNextLineToClipboard() {
     setTimeout(() => {
         markAsPasted(clipboardIndex);
@@ -51,7 +58,10 @@ function loadNextLineToClipboard() {
     }, 100);
 }
 
-function appendTextArea() {
+/**
+* @desc Append a text area to the page where the user can paste the address.
+*/
+function appendExtensionHtml() {
     const containerDiv = document.createElement('div');
     containerDiv.id = 'cz-post-extension-container';
 
@@ -101,6 +111,9 @@ function appendTextArea() {
     console.log("Appended text area!");
 }
 
+/**
+ * @desc Reset all the values and clear the text area.
+ */
 function resetAll() {
     clipboardFeed = [];
     clipboardIndex = 0;
@@ -111,12 +124,20 @@ function resetAll() {
     textArea.value = "";
 }
 
+/**
+ * In the clipboard display, mark this line as already copied.
+ * @param {number} lineIndex - Index of line that was copied from clipboard and pasted into the form.
+ */
 function markAsPasted(lineIndex) {
     const targetElement = document.querySelector('#cz-post-extension-container-right');
     const p = targetElement.querySelector(`li[data-line_index="${lineIndex}"]`);
     p.style.textDecoration = "line-through";
 }
 
+/**
+ * In the clipboard display, signify to the user which line is currently copied in the clipboard.
+ * @param {number} currentIndex - Index of the line that is currently copied in the clipboard. 
+ */
 function markCurrentlyCopiedLine(currentIndex) {
     const targetElements = document.querySelectorAll('#cz-post-extension-container-right-line-container > li');
     console.log(targetElements);
@@ -130,6 +151,10 @@ function markCurrentlyCopiedLine(currentIndex) {
     });
 }
 
+/**
+ * When user pastes the address into the text area, split it into parts and display them in the right container.
+ * @param {string} address - Contents pasted into the text area. 
+ */
 function onPasteToTextArea(address) {
     const [givenName, surname, street, houseNumber, town, postalCode, telephone] = splitAddress(address);
 
@@ -156,20 +181,9 @@ function onPasteToTextArea(address) {
 }
 
 /**
- * Replace country names used by Shopify with country names recognized by the Czech Post website.
- * @param {string} countryName 
- * @returns {string} Adjusted country name.
- */
-function adjustCountryNameForShopify(countryName) {
-    return countryName
-        .replace('Czechia', 'Czech Republic')
-        .replace('United States', 'United States of America');
-}
-
-/**
- * For addresses inside Czechia, different form is generated.
- * To allow the extension to fill in all the fields, we must first select "manual address input" in the input type dropdown.
- * @returns {void}
+ * For addresses inside Czechia, different form is generated, 
+ * and we need the user to select the "Entering the address manually" option first.
+ * @returns {boolean} True if the address is set to Czechia, false otherwise.
  */
 function isSendingToCzechRepublic() {
     //if #adresatTypAdresy is present, this is a package within Czech Republic
@@ -180,7 +194,7 @@ function isSendingToCzechRepublic() {
 /**
  * @desc Takes a comma separated string of address parts and splits it into an array, while making adjustments such as making sure apt. number is included in the street, if present.
  * @param {string} address - Comma-separated address as copied from Shopify. 
- * @returns {string[]} Array of address parts ([name, street, town, country, telephone]).
+ * @returns {string[]} Array of address parts ([givenName, surname, streetName, houseNumber, municipality, postalCodeWithoutSpaces, phoneNumericOnly]).
  */
 function splitAddress(address) {
     const parts = address.split(/[\n,]+/);
@@ -244,8 +258,6 @@ function splitNames(names) {
     return [givenName, surname];
 }
 
-
-
 /** 
  * @desc Entrypoint method. 
 */
@@ -253,7 +265,7 @@ async function start() {
     //setupMessageListeners();
     //handlePageLoaded();
     setUpControlVListener();
-    appendTextArea();
+    appendExtensionHtml();
 }
 
 start();
