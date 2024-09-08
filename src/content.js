@@ -212,13 +212,15 @@ function splitAddress(address) {
     // match parts of STREET containing a number
     const houseNumber = street.split(' ').filter(part => part.match(/\d+/)).join(' ');
     // match any parts of TOWN containing a number
-    const postalCode = townAndPostalCode.split(' ').filter(part => part.match(/\d+/)).join();
+    const postalCode = townAndPostalCode.split(' ').filter(part => part.match(/\d+/)).join(' ');
     // TOWN without post code
     const municipality = townAndPostalCode.replace(postalCode, '').trim();
     // only NUMERIC parts of telephone
     const phoneNumericOnly = telephone.replace(/\D/g, '');
+    // postal code should be without whitespaces
+    const postalCodeWithoutSpaces = postalCode.replace(/\s/g, '');
 
-    return [givenName, surname, streetName, houseNumber, municipality, postalCode, phoneNumericOnly].map(x => x.trim());
+    return [givenName, surname, streetName, houseNumber, municipality, postalCodeWithoutSpaces, phoneNumericOnly].map(x => x.trim());
 }
 
 /**
@@ -240,23 +242,6 @@ function splitNames(names) {
     }
 
     return [givenName, surname];
-}
-
-/**
- * Fill the fields for street name and number. When sending to Czechia, street number should be included in the street name field.
- * @param {string} street - Street name and number.
- */
-function pasteStreetNameAndNumber(street) {
-    // match parts of STREET not containing a number
-    const streetName = street.split(' ').filter(part => !part.match(/\d+/)).join(' ');
-    // match parts of STREET containing a number
-    const streetNumber = street.split(' ').filter(part => part.match(/\d+/)).join(' ');
-    const streetNoInput = document.getElementById('adresat.adresa.cpcoRucni');
-    if (streetNoInput) {
-    }
-    else {
-        clipboardFeed.push(streetName + " " + streetNumber);
-    }
 }
 
 
