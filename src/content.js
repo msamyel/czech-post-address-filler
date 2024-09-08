@@ -192,9 +192,9 @@ function onPasteToTextArea(address) {
  * @returns {boolean} True if the address is set to Czechia, false otherwise.
  */
 function isSendingToCzechRepublic() {
-    //if #adresatTypAdresy is present, this is a package within Czech Republic
-    const addressInputType = document.getElementById("adresatTypAdresy");
-    return !(!addressInputType);
+    //if #addressee-type's parent is not hidden, this is a package within Czech Republic
+    const addressInputGroup = document.querySelector("#addressee-type").parentElement;
+    return !addressInputGroup.classList.contains("hidden");
 }
 
 /**
