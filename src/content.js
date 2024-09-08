@@ -52,6 +52,12 @@ function loadNextLineToClipboard() {
     setTimeout(() => {
         markAsPasted(clipboardIndex);
         clipboardIndex++;
+
+        if (clipboardIndex >= clipboardFeed.length) {
+            isListentingForCtrlV = false;
+            return;
+        }
+
         markCurrentlyCopiedLine(clipboardIndex);
         const line = clipboardFeed[clipboardIndex];
         navigator.clipboard.writeText(line);
