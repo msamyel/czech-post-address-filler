@@ -297,4 +297,9 @@ async function start() {
     appendExtensionHtml();
 }
 
-start();
+// This will only run in the Chrome environment (not in tests)
+if (typeof chrome !== 'undefined' && chrome.runtime) {
+    start();
+}
+
+module.exports = { isPartOfStreetName };
