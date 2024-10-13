@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Czech Post Address Filler",
-  "version": "0.1",
+  "version": "0.2",
   "description": "Extension for faster filling out addresses on Czech Post website.",
   "author": "Matěj Voslař",
 
