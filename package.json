@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --env=jsdom",
+    "run:firefox": "web-ext run --source-dir ./src/ --verbose",
     "doc": "jsdoc src/ -d docs/ -r",
     "build": "sh build.sh"
   },

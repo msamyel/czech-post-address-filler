@@ -13,8 +13,7 @@ let ctrlDown = false;
 let isListentingForCtrlV = false;
 const ctrlKey = 17,
     cmdKey = 91,
-    vKey = 86,
-    cKey = 67;
+    metaKey = 224 // MacOS, Firefox
 
 /** Listen to Ctrl+V or Cmd+V (MacOS) */
 function setUpControlVListener() {
@@ -22,10 +21,10 @@ function setUpControlVListener() {
         if (!isListentingForCtrlV) {
             return;
         }
-        if (e.keyCode == ctrlKey || e.keyCode == cmdKey) {
+        if (e.keyCode == ctrlKey || e.keyCode == cmdKey || e.keyCode == metaKey) {
             ctrlDown = true;
         }
-        if (event.key === 'v' && ctrlDown) {
+        if (e.key === 'v' && ctrlDown) {
             loadNextLineToClipboard();
         }
     });
