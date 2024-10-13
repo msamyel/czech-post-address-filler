@@ -228,9 +228,9 @@ function splitAddress(address) {
 
     const [givenName, surname] = splitNames(names);
     // match parts of STREET not containing a number
-    const streetName = street.split(' ').filter(part => !part.match(/\d+/)).join(' ');
+    const streetName = street.split(' ').filter(part => isPartOfStreetName(part)).join(' ');
     // match parts of STREET containing a number
-    const houseNumber = street.split(' ').filter(part => part.match(/\d+/)).join(' ');
+    const houseNumber = street.split(' ').filter(part => !isPartOfStreetName(part)).join(' ');
     // match any parts of TOWN containing a number
     const postalCode = townAndPostalCode.split(' ').filter(part => part.match(/\d+/)).join(' ');
     // TOWN without post code
@@ -242,6 +242,28 @@ function splitAddress(address) {
     const postalCodeWithoutSpaces = postalCode.replace(/\s/g, '');
 
     return [givenName, surname, streetName, houseNumber, municipality, postalCodeWithoutSpaces, phoneNumber].map(x => x.trim());
+}
+
+/**
+ * @desc Determine if word is a part of streetname or house/appartment number.
+ * @param {string} word - part of the address line separated by spaces. 
+ * @returns true if word is part of street name, false if it is a house/appartment number
+ */
+function isPartOfStreetName(word) {
+    if (!word.match(/\d+/)) {
+        // no numeric parts mean this is a part of street name
+        return true;
+    }
+    if (word.match(/\d+\./)) {
+        // ordinal numbers likely a part of street name, such as "17. listopadu"
+        return true;
+    }
+    if (word.match(/1st|2nd|3rd|4th|5th|6th|7th|8th|9th|0th/)) {
+        // ordinal numbers in English likely a part of street name, such as "3rd Avenue"
+        return true;
+    }
+    // contains numeric parts which are not ordinal numbers, likely a house/appartment number number
+    return false;
 }
 
 /**
