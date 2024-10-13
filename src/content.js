@@ -237,10 +237,11 @@ function splitAddress(address) {
     const municipality = townAndPostalCode.replace(postalCode, '').trim();
     // only NUMERIC parts of telephone
     const phoneNumericOnly = telephone.replace(/\D/g, '');
+    const phoneNumber = '+' + phoneNumericOnly;
     // postal code should be without whitespaces
     const postalCodeWithoutSpaces = postalCode.replace(/\s/g, '');
 
-    return [givenName, surname, streetName, houseNumber, municipality, postalCodeWithoutSpaces, phoneNumericOnly].map(x => x.trim());
+    return [givenName, surname, streetName, houseNumber, municipality, postalCodeWithoutSpaces, phoneNumber].map(x => x.trim());
 }
 
 /**
