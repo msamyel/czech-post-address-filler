@@ -272,16 +272,16 @@ function isPartOfStreetName(word) {
  */
 function splitNames(names) {
     const nameSplit = names.split(' ');
-    let givenName = "";
-    const surname = nameSplit.pop();
+    let surname = "";
+    const givenName = nameSplit.shift();
 
     if (nameSplit.length === 0) {
         // handle single name
-        givenName = surname;
+        surname = givenName;
     }
     else {
         // handle middle names
-        givenName = nameSplit.join(' ');
+        surname = nameSplit.join(' ');
     }
 
     return [givenName, surname];
@@ -302,4 +302,4 @@ if (typeof chrome !== 'undefined' && chrome.runtime) {
     start();
 }
 
-module.exports = { isPartOfStreetName };
+module.exports = { isPartOfStreetName, splitNames, splitAddress };

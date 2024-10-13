@@ -1,4 +1,4 @@
-const { isPartOfStreetName } = require('../src/content.js');
+const { isPartOfStreetName, splitNames, splitAddress } = require('../src/content.js');
 
 test('parse word to be a part of street name / house number', () => {
     // correct parts of street names
@@ -16,4 +16,12 @@ test('parse word to be a part of street name / house number', () => {
     expect(isPartOfStreetName('76-14')).toBe(false);
     expect(isPartOfStreetName('76')).toBe(false);
     expect(isPartOfStreetName('14')).toBe(false);
+});
+
+test('given name and surname are both required, generate satisfying split of names', () => {
+    expect(splitNames('John Doe')).toEqual(['John', 'Doe']);
+    expect(splitNames('John Doe Smith')).toEqual(['John', 'Doe Smith']);
+    expect(splitNames('John Doe Smith Jr.')).toEqual(['John', 'Doe Smith Jr.']);
+    expect(splitNames('John Doe Smith Jr. III')).toEqual(['John', 'Doe Smith Jr. III']);
+    expect(splitNames('Zendaya')).toEqual(['Zendaya', 'Zendaya']);
 });
