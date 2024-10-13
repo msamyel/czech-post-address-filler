@@ -228,9 +228,9 @@ function splitAddress(address) {
 
     const [givenName, surname] = splitNames(names);
     // match parts of STREET not containing a number
-    const streetName = street.split(' ').filter(part => isPartOfStreetName(part)).join(' ');
+    const streetName = street.split(' ').filter(part => part && isPartOfStreetName(part)).join(' ');
     // match parts of STREET containing a number
-    const houseNumber = street.split(' ').filter(part => !isPartOfStreetName(part)).join(' ');
+    const houseNumber = street.split(' ').filter(part => part && !isPartOfStreetName(part)).join(' ');
     // match any parts of TOWN containing a number
     const postalCode = townAndPostalCode.split(' ').filter(part => part.match(/\d+/)).join(' ');
     // TOWN without post code
