@@ -202,28 +202,14 @@ function isSendingToCzechRepublic() {
  * @returns {string[]} Array of address parts ([givenName, surname, streetName, houseNumber, municipality, postalCodeWithoutSpaces, phoneNumericOnly]).
  */
 function splitAddress(address) {
-    const parts = address.split(/[\n,]+/);
+    const parts = address.split(/[\n,]+/).map(part => part.trim());
     //const exampleSpain = "name, street and number, [apt. number], post number + municipalit, region, country, telephone"
     //const exampleCanada = "name, street, municipality region postcode, country, telephone"
-    let index = 0;
-    const names = parts[index++];
-    let street = parts[index++];
-    let isAptNumberSeparate = false;
-    if (parts[index].trim().split(' ').length === 1) {
-        // next part is probably apt. number
-        isAptNumberSeparate = true;
-        street += ", " + parts[index++];
-    }
-    const townAndPostalCode = parts[index++];
-    let countryAndRegion = "";
-    if (parts.length <= (5 + (isAptNumberSeparate ? 1 : 0))) {
-        countryAndRegion = parts[index++];
-    }
-    else {
-        countryAndRegion = parts[index++] + " " + parts[index++];
-    }
-
-    telephone = parts[index++];
+    const names = parts.shift();
+    const street = takeStreetNameAndAptNumber(parts);
+    const townAndPostalCode = takeMunicipalityAndPostalCode(parts);
+    const country = parts.shift(); // not used
+    const telephone = parts.shift();
 
     const [givenName, surname] = splitNames(names);
     // match parts of STREET not containing a number
@@ -243,12 +229,45 @@ function splitAddress(address) {
     return [givenName, surname, streetName, houseNumber, municipality, postalCodeWithoutSpaces, phoneNumber].map(x => x.trim());
 }
 
+function takeStreetNameAndAptNumber(parts) {
+    let street = parts.shift();
+
+    if (street.split(" ").every(part => isPartOfStreetName(part))) {
+        // this part does not contain a house number, so it probably is in the next part
+        // add the next part but only if the first word of the next part is confirmed to be a part of house number
+        // because some addresses might simply not have any house number
+        if (!isPartOfStreetName(parts[0].split(' ')[0])) {
+            street += " " + parts.shift();
+        }
+    }
+    return street;
+}
+
+function takeMunicipalityAndPostalCode(parts) {
+    if (parts[0].match(/\d+/)) {
+        return parts.shift();
+    }
+    let townAndPostalCode = parts.shift();
+    while (parts.length > 0 && !parts[0].match(/\d+/)) {
+        townAndPostalCode += ", " + parts.shift();
+    }
+    townAndPostalCode += " " + parts.shift();
+    return townAndPostalCode;
+}
+
 /**
  * @desc Determine if word is a part of streetname or house/appartment number.
  * @param {string} word - part of the address line separated by spaces. 
  * @returns true if word is part of street name, false if it is a house/appartment number
  */
 function isPartOfStreetName(word) {
+    const wordLower = word.toLowerCase();
+    if (wordLower == "apt" || wordLower == "apartment" || wordLower == "apt." || wordLower == "suite") {
+        return false;
+    }
+    if (wordLower == "po" || wordLower == "p.o." || wordLower == "box") {
+        return false;
+    }
     if (!word.match(/\d+/)) {
         // no numeric parts mean this is a part of street name
         return true;

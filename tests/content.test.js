@@ -41,13 +41,22 @@ test('split address into individual part', () => {
         .toEqual(['Linda', 'González', 'Calle Gran Vía', '12', 'Madrid', '28013', '+34912345678']);
 
     expect(splitAddress('Hiroshi Tanaka, 1-4-2 Ginza, Chuo-ku, Tokyo 104-0061, Japan, +81312345678'))
-        .toEqual(['Hiroshi', 'Tanaka', 'Ginza, Chuo-ku', '1-4-2', 'Tokyo', '104-0061', '+81312345678']);
+        .toEqual(['Hiroshi', 'Tanaka', 'Ginza', '1-4-2', 'Chuo-ku Tokyo', '104-0061', '+81312345678']);
 
     expect(splitAddress('Amira Hassan, 15 Cairo St, Zamalek, Cairo 11561, Egypt, +20298765432'))
-        .toEqual(['Amira', 'Hassan', 'Cairo St, Zamalek', '15', 'Cairo', '11561', '+20298765432']);
+        .toEqual(['Amira', 'Hassan', 'Cairo St', '15', 'Zamalek Cairo', '11561', '+20298765432']);
 
     expect(splitAddress('Harrier Du Bois, 16 Rue de Ravioli, 75004 Paris, France, +33123456789'))
         .toEqual(['Harrier', 'Du Bois', 'Rue de Ravioli', '16', 'Paris', '75004', '+33123456789']);
+
+    expect(splitAddress('Harrier Du Bois, Rue de Ravioli, 16, 75004 Paris, France, +33123456789'))
+        .toEqual(['Harrier', 'Du Bois', 'Rue de Ravioli', '16', 'Paris', '75004', '+33123456789']);
+
+    expect(splitAddress('Harrier Du Bois, Rue de Ravioli, PO Box 16, 75004 Paris, France, +33123456789'))
+        .toEqual(['Harrier', 'Du Bois', 'Rue de Ravioli', 'PO Box 16', 'Paris', '75004', '+33123456789']);
+
+    expect(splitAddress('Harrier Du Bois, Rue de Ravioli, apt. 16, 75004 Paris, France, +33123456789'))
+        .toEqual(['Harrier', 'Du Bois', 'Rue de Ravioli', 'apt. 16', 'Paris', '75004', '+33123456789']);
 
     expect(splitAddress('Chen Wei, 79 Nanjing Road, Huangpu District Shanghai 200001, China, +862112345678'))
         .toEqual(['Chen', 'Wei', 'Nanjing Road', '79', 'Huangpu District Shanghai', '200001', '+862112345678']);
@@ -57,4 +66,10 @@ test('split address into individual part', () => {
 
     expect(splitAddress('Svetlana Petrova, 23 Arbat Street, Moscow 119002, Russia, +74951234567'))
         .toEqual(['Svetlana', 'Petrova', 'Arbat Street', '23', 'Moscow', '119002', '+74951234567']);
+
+    expect(splitAddress('Sven Eriksson, 10 Chapel Road, Red Pinetown, Kettering, NN15 6WS, United Kingdom, 0701233312'))
+        .toEqual(['Sven', 'Eriksson', 'Chapel Road', '10', 'Red Pinetown, Kettering', 'NN156WS', '+0701233312']);
+
+    expect(splitAddress('Sven Eriksson, 10 Chapel Road, Red Pinetown, NN15 6WS, United Kingdom, 0701233312'))
+        .toEqual(['Sven', 'Eriksson', 'Chapel Road', '10', 'Red Pinetown', 'NN156WS', '+0701233312']);
 });
