@@ -4,7 +4,12 @@ Extension for easier addressee registration on [Czech Post website](https://www.
 
 ## How to install
 
-TBA
+Latest releases can be found on the official extension store webpages.
+
+- [Store page for Chrome](https://chromewebstore.google.com/detail/czech-post-address-filler/laphpjdogbfjjpanbjmkekcinmilejbd)
+- [Store page for Firefox](https://addons.mozilla.org/en-US/firefox/addon/czech-post-address-filler/)
+
+You can also build the extension yourself and follow [this tutorial](https://developer.chrome.com/docs/extensions/get-started/tutorial/hello-world#load-unpacked) to load it in Chrome. Or use the [web-ext npm module](https://www.npmjs.com/package/web-ext) to run it in development mode on Firefox.
 
 ## How to use
 
