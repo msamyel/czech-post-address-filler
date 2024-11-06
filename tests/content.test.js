@@ -72,4 +72,16 @@ test('split address into individual part', () => {
 
     expect(splitAddress('Sven Eriksson, 10 Chapel Road, Red Pinetown, NN15 6WS, United Kingdom, 0701233312'))
         .toEqual(['Sven', 'Eriksson', 'Chapel Road', '10', 'Red Pinetown', 'NN156WS', '+0701233312']);
+
+    expect(splitAddress('Peter Wald, 12 Main Road, Ipswich, IP2 9ST, United Kingdom, 0123456789'))
+        .toEqual(['Peter', 'Wald', 'Main Road', '12', 'Ipswich', 'IP29ST', '+0123456789']);
+
+    expect(splitAddress('Mark Horrigan, 211 Hill Road, 14, Big Town, Tennessee 12345, United States, 123123123'))
+        .toEqual(['Mark', 'Horrigan', 'Hill Road', '211 14', 'Big Town Tennessee', '12345', '+123123123']);
+
+    expect(splitAddress('Jane Doe, 123 Elm Street, 2e etage, 12345 Springfield, USA, +1234567890'))
+        .toEqual(['Jane', 'Doe', 'Elm Street', '123 2e etage', 'Springfield', '12345', '+1234567890']);
+
+    expect(splitAddress('Linda Armstrong, 13 Brighthill Court, Marvin A 994, Brooklyn New York 14623, United States, +123123123'))
+        .toEqual(['Linda', 'Armstrong', 'Brighthill Court Marvin A', '13 994', 'Brooklyn New York', '14623', '+123123123']);
 });

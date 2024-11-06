@@ -230,16 +230,30 @@ function splitAddress(address) {
 }
 
 function takeStreetNameAndAptNumber(parts) {
-    let street = parts.shift();
+    // Decision tree:
+    // 1) take the first part (always a street), you can later parse out numbers from it
+    // 2) check if only three parts are remaining (cityregionpostalcode, country and phone)
+    //      TRUE => no more street parts, return immediately
+    //      FALSE => check there could be [house number], city, region [postal code], phone
+    //                                 or [house, number], city [postal code], phone
+    //                                 or city, region [postal code], phone
+    //                                  
+    //               so 3) check if the next part contains no numbers (city)
+    //                          TRUE => return immediately
+    //                          FALSE => append the next part (house number) to the street and return
 
-    if (street.split(" ").every(part => isPartOfStreetName(part))) {
-        // this part does not contain a house number, so it probably is in the next part
-        // add the next part but only if the first word of the next part is confirmed to be a part of house number
-        // because some addresses might simply not have any house number
-        if (!isPartOfStreetName(parts[0].split(' ')[0])) {
-            street += " " + parts.shift();
-        }
+    let street = parts.shift();
+    if (parts.length <= 3) {
+        // only three parts remaining (cityregionpostalcode, country and phone) so return here
+        return street;
     }
+
+    if (parts[0].split(" ").every(part => isPartOfStreetName(part))) {
+        // next part doesn't contain house number, so it should be the city. Return here.
+        return street;
+    }
+
+    street += " " + parts.shift();
     return street;
 }
 
@@ -265,7 +279,7 @@ function isPartOfStreetName(word) {
     if (wordLower == "apt" || wordLower == "apartment" || wordLower == "apt." || wordLower == "suite") {
         return false;
     }
-    if (wordLower == "po" || wordLower == "p.o." || wordLower == "box") {
+    if (wordLower == "po" || wordLower == "p.o." || wordLower == "box" || wordLower == "etage" || wordLower == "floor") {
         return false;
     }
     if (!word.match(/\d+/)) {
