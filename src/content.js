@@ -161,10 +161,11 @@ function markCurrentlyCopiedLine(currentIndex) {
  * @param {string} address - Contents pasted into the text area. 
  */
 function onPasteToTextArea(address) {
-    const [givenName, surname, street, houseNumber, town, postalCode, telephone] = splitAddress(address);
+    const isCzechia = isSendingToCzechRepublic();
+    const [givenName, surname, street, houseNumber, town, postalCode, telephone] = splitAddress(address, isCzechia);
 
     // change order of elements to fit the Czech Post form
-    if (isSendingToCzechRepublic()) {
+    if (isCzechia) {
         clipboardFeed = [givenName, surname, town, street + " " + houseNumber, postalCode, telephone];
     }
     else {
@@ -199,9 +200,10 @@ function isSendingToCzechRepublic() {
 /**
  * @desc Takes a comma separated string of address parts and splits it into an array, while making adjustments such as making sure apt. number is included in the street, if present.
  * @param {string} address - Comma-separated address as copied from Shopify. 
+ * @param {boolean} isCzechia - If the address is being sent to Czechia, do not put '+' in front of the phone number.
  * @returns {string[]} Array of address parts ([givenName, surname, streetName, houseNumber, municipality, postalCodeWithoutSpaces, phoneNumericOnly]).
  */
-function splitAddress(address) {
+function splitAddress(address, isCzechia = false) {
     const parts = address.split(/[\n,]+/).map(part => part.trim());
     //const exampleSpain = "name, street and number, [apt. number], post number + municipalit, region, country, telephone"
     //const exampleCanada = "name, street, municipality region postcode, country, telephone"
@@ -221,8 +223,7 @@ function splitAddress(address) {
     // TOWN without post code
     const municipality = townAndPostalCode.replace(postalCode, '').trim();
     // only NUMERIC parts of telephone
-    const phoneNumericOnly = telephone.replace(/\D/g, '');
-    const phoneNumber = '+' + phoneNumericOnly;
+    const phoneNumber = formatPhoneNumber(telephone, isCzechia);
     // postal code should be without whitespaces
     const postalCodeWithoutSpaces = postalCode.replace(/\s/g, '');
 
@@ -267,6 +268,19 @@ function takeMunicipalityAndPostalCode(parts) {
     }
     townAndPostalCode += " " + parts.shift();
     return townAndPostalCode;
+}
+
+/**
+ * 
+ * @param {string} phoneNumber: trimmed phone number to be formatted 
+ * @param {*} isCzechia: if the address is being sent to Czechia, do not put '+' or '420' in front of the phone number.
+ * @returns {string} formatted phone number
+ */
+function formatPhoneNumber(phoneNumber, isCzechia) {
+    if (isCzechia) {
+        return phoneNumber.replace(/^[+]?420/g, '').replace(/\D/g, '');
+    }
+    return "+" + phoneNumber.replace(/\D/g, '');
 }
 
 /**
@@ -334,4 +348,4 @@ if (typeof chrome !== 'undefined' && chrome.runtime) {
     start();
 }
 
-module.exports = { isPartOfStreetName, splitNames, splitAddress };
+module.exports = { isPartOfStreetName, splitNames, splitAddress, formatPhoneNumber };
