@@ -166,10 +166,10 @@ function onPasteToTextArea(address) {
 
     // change order of elements to fit the Czech Post form
     if (isCzechia) {
-        clipboardFeed = [givenName, surname, town, street + " " + houseNumber, postalCode, telephone];
+        clipboardFeed = [givenName, surname, town, street + " " + houseNumber, postalCode, telephone].filter(x => x);
     }
     else {
-        clipboardFeed = [givenName, surname, town, street, houseNumber, postalCode, telephone];
+        clipboardFeed = [givenName, surname, town, street, houseNumber, postalCode, telephone].filter(x => x);
     }
 
     const targetElement = document.querySelector("#cz-post-extension-container-right-line-container");
@@ -211,7 +211,7 @@ function splitAddress(address, isCzechia = false) {
     const street = takeStreetNameAndAptNumber(parts);
     const townAndPostalCode = takeMunicipalityAndPostalCode(parts);
     const country = parts.shift(); // not used
-    const telephone = parts.shift();
+    const telephone = (parts.length == 0) ? '' : parts.shift();
 
     const [givenName, surname] = splitNames(names);
     // match parts of STREET not containing a number
@@ -277,6 +277,9 @@ function takeMunicipalityAndPostalCode(parts) {
  * @returns {string} formatted phone number
  */
 function formatPhoneNumber(phoneNumber, isCzechia) {
+    if (phoneNumber == '') {
+        return '';
+    }
     if (isCzechia) {
         return phoneNumber.replace(/^[+]?420/g, '').replace(/\D/g, '');
     }

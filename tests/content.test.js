@@ -54,11 +54,19 @@ test('split address into individual part', () => {
     expect(splitAddress('Marek Novak, 17. listopadu 47/56, Praha 181 00, Czech Republic, +420123456789', isCzechia = true))
         .toEqual(['Marek', 'Novak', '17. listopadu', '47/56', 'Praha', '18100', '123456789']);
 
+    // repeat without telephone
+    expect(splitAddress('Marek Novak, 17. listopadu 47/56, Praha 181 00, Czech Republic', isCzechia = true))
+        .toEqual(['Marek', 'Novak', '17. listopadu', '47/56', 'Praha', '18100', '']);
+
     expect(splitAddress('Veronika Vlachová, Náměstí Míru 102/5, Pardubice 530 02, Czech Republic, +420123987654', isCzechia = true))
         .toEqual(['Veronika', 'Vlachová', 'Náměstí Míru', '102/5', 'Pardubice', '53002', '123987654']);
 
     expect(splitAddress('Linda González, Calle Gran Vía 12, Madrid 28013, Spain, +34912345678', isCzechia = false))
         .toEqual(['Linda', 'González', 'Calle Gran Vía', '12', 'Madrid', '28013', '+34912345678']);
+
+    // repeat without telephone
+    expect(splitAddress('Linda González, Calle Gran Vía 12, Madrid 28013, Spain', isCzechia = false))
+        .toEqual(['Linda', 'González', 'Calle Gran Vía', '12', 'Madrid', '28013', '']);
 
     expect(splitAddress('Hiroshi Tanaka, 1-4-2 Ginza, Chuo-ku, Tokyo 104-0061, Japan, +81312345678', isCzechia = false))
         .toEqual(['Hiroshi', 'Tanaka', 'Ginza', '1-4-2', 'Chuo-ku Tokyo', '104-0061', '+81312345678']);
