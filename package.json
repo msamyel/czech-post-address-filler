@@ -1,21 +1,21 @@
 {
-  "name": "czech-post-address-filler",
-  "version": "0.0.1",
-  "description": "Extension for faster filling out addresses on Czech Post website.",
-  "main": "index.js",
-  "scripts": {
-    "test": "jest --env=jsdom",
-    "run:firefox": "web-ext run --source-dir ./src/ --verbose",
-    "doc": "jsdoc src/ -d docs/ -r",
-    "build": "sh build.sh"
-  },
-  "author": "Matěj Voslař",
-  "license": "GPL-3.0-only",
-  "devDependencies": {
-    "jest": "^29.7.0",
-    "jsdoc": "^4.0.3",
-    "web-ext": "^7.11.0",
-    "jest-environment-jsdom": "^29.7.0"
-  },
-  "dependencies": {}
+    "name": "czech-post-address-filler",
+    "version": "0.6",
+    "description": "Extension for faster filling out addresses on Czech Post website.",
+    "main": "index.js",
+    "scripts": {
+        "test": "jest --env=jsdom",
+        "run:firefox": "web-ext run --source-dir ./src/ --verbose",
+        "doc": "jsdoc src/ -d docs/ -r",
+        "build": "sh build.sh"
+    },
+    "author": "Matěj Voslař",
+    "license": "GPL-3.0-only",
+    "devDependencies": {
+        "jest": "^29.7.0",
+        "jsdoc": "^4.0.3",
+        "web-ext": "^7.11.0",
+        "jest-environment-jsdom": "^29.7.0"
+    },
+    "dependencies": {}
 }

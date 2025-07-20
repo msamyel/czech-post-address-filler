@@ -162,14 +162,14 @@ function markCurrentlyCopiedLine(currentIndex) {
  */
 function onPasteToTextArea(address) {
     const isCzechia = isSendingToCzechRepublic();
-    const [givenName, surname, street, houseNumber, town, postalCode, telephone] = splitAddress(address, isCzechia);
+    const [givenName, surname, streetAndAptNumber, town, postalCode, telephone] = splitAddress(address, isCzechia);
 
     // change order of elements to fit the Czech Post form
     if (isCzechia) {
-        clipboardFeed = [givenName, surname, town, street + " " + houseNumber, postalCode, telephone].filter(x => x);
+        clipboardFeed = [givenName, surname, town, streetAndAptNumber, postalCode, telephone].filter(x => x);
     }
     else {
-        clipboardFeed = [givenName, surname, town, street, houseNumber, postalCode, telephone].filter(x => x);
+        clipboardFeed = [givenName, surname, town, streetAndAptNumber, postalCode, telephone].filter(x => x);
     }
 
     const targetElement = document.querySelector("#cz-post-extension-container-right-line-container");
@@ -208,16 +208,12 @@ function splitAddress(address, isCzechia = false) {
     //const exampleSpain = "name, street and number, [apt. number], post number + municipalit, region, country, telephone"
     //const exampleCanada = "name, street, municipality region postcode, country, telephone"
     const names = parts.shift();
-    const street = takeStreetNameAndAptNumber(parts);
+    const streetAndAptNumber = takeStreetNameAndAptNumber(parts);
     const townAndPostalCode = takeMunicipalityAndPostalCode(parts);
     const country = parts.shift(); // not used
     const telephone = (parts.length == 0) ? '' : parts.shift();
 
     const [givenName, surname] = splitNames(names);
-    // match parts of STREET not containing a number
-    const streetName = street.split(' ').filter(part => part && isPartOfStreetName(part)).join(' ');
-    // match parts of STREET containing a number
-    const houseNumber = street.split(' ').filter(part => part && !isPartOfStreetName(part)).join(' ');
     // match any parts of TOWN containing a number
     const postalCode = townAndPostalCode.split(' ').filter(part => part.match(/\d+/)).join(' ');
     // TOWN without post code
@@ -227,7 +223,7 @@ function splitAddress(address, isCzechia = false) {
     // postal code should be without whitespaces
     const postalCodeWithoutSpaces = postalCode.replace(/\s/g, '');
 
-    return [givenName, surname, streetName, houseNumber, municipality, postalCodeWithoutSpaces, phoneNumber].map(x => x.trim());
+    return [givenName, surname, streetAndAptNumber, municipality, postalCodeWithoutSpaces, phoneNumber].map(x => x.trim());
 }
 
 function takeStreetNameAndAptNumber(parts) {
